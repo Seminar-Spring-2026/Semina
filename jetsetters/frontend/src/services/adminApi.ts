@@ -1,3 +1,5 @@
+import { auth } from '../config/firebase';
+
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001';
 
 interface ApiResponse<T> {
@@ -8,11 +10,24 @@ interface ApiResponse<T> {
   count?: number;
 }
 
+async function getFirebaseAuthToken(): Promise<string | null> {
+  const user = auth.currentUser;
+  if (!user) return null;
+  try {
+    return await user.getIdToken();
+  } catch {
+    return null;
+  }
+}
+
 async function fetchApi<T>(endpoint: string, options?: RequestInit): Promise<T> {
+  const token = await getFirebaseAuthToken();
+
   const response = await fetch(`${API_BASE_URL}${endpoint}`, {
     ...options,
     headers: {
       'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...options?.headers,
     },
   });
@@ -29,6 +44,16 @@ async function fetchApi<T>(endpoint: string, options?: RequestInit): Promise<T> 
   }
 
   return result.data as T;
+}
+
+export interface ChatHistoryMessage {
+  role: 'user' | 'assistant';
+  content: string;
+}
+
+export interface StreamChunk {
+  content: string;
+  done: boolean;
 }
 
 export interface SystemStatus {
@@ -137,6 +162,69 @@ export interface LogEntry {
 }
 
 export const adminApi = {
+  chat: async (message: string, history: ChatHistoryMessage[] = []): Promise<{ message: string }> => {
+    return fetchApi<{ message: string }>('/api/admin/chat', {
+      method: 'POST',
+      body: JSON.stringify({ message, history }),
+    });
+  },
+
+  chatStream: async function* (
+    message: string,
+    history: ChatHistoryMessage[] = []
+  ): AsyncGenerator<StreamChunk> {
+    const token = await getFirebaseAuthToken();
+    const response = await fetch(`${API_BASE_URL}/api/admin/chat/stream`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+      body: JSON.stringify({ message, history }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      yield { content: `Error: ${errorData.error || response.statusText}`, done: true };
+      return;
+    }
+
+    const reader = response.body?.getReader();
+    if (!reader) {
+      yield { content: 'Error: Failed to get response stream', done: true };
+      return;
+    }
+
+    const decoder = new TextDecoder();
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      const chunk = decoder.decode(value);
+      const lines = chunk.split('\n').filter((line) => line.trim() !== '');
+
+      for (const line of lines) {
+        if (!line.startsWith('data: ')) continue;
+        const data = line.slice(6);
+
+        if (data === '[DONE]') {
+          yield { content: '', done: true };
+          return;
+        }
+
+        try {
+          const parsed = JSON.parse(data) as Partial<StreamChunk>;
+          const content = typeof parsed.content === 'string' ? parsed.content : '';
+          if (content) yield { content, done: false };
+        } catch {
+          // ignore malformed chunks
+        }
+      }
+    }
+
+    yield { content: '', done: true };
+  },
+
   getAnomalyCurrent: async (): Promise<AnomalyCurrent> => {
     return fetchApi<AnomalyCurrent>('/api/admin/anomaly/current');
   },

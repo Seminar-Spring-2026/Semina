@@ -3,8 +3,112 @@ import { operatorDataService } from '../services/operator-data.service.js';
 import { operatorMLService } from '../services/operator-ml.service.js';
 import { OperatorDataMapper } from '../utils/operator-data-mapper.js';
 import { ErrorHandler } from '../middleware/error-handler.middleware.js';
+import { AI_ANALYST_SYSTEM_PROMPT } from '../config/ai-analyst-prompt.js';
+import { GeminiChatService, type ChatMessage as GeminiChatMessage } from '../services/gemini-chat.service.js';
 
 const router = Router();
+
+router.post('/chat', ErrorHandler.asyncHandler(async (req: Request, res: Response) => {
+  const body = (req.body || {}) as {
+    message?: unknown;
+    history?: unknown;
+  };
+
+  const message = typeof body.message === 'string' ? body.message.trim() : '';
+  if (!message) {
+    res.status(400).json({
+      success: false,
+      error: 'Missing required field: message',
+    });
+    return;
+  }
+
+  let history: GeminiChatMessage[] = [];
+  if (Array.isArray(body.history)) {
+    history = body.history
+      .filter((m) => m && typeof m === 'object')
+      .map((m) => {
+        const mm = m as Record<string, unknown>;
+        const role: GeminiChatMessage['role'] = mm.role === 'assistant' ? 'assistant' : 'user';
+        const content = typeof mm.content === 'string' ? mm.content : '';
+        return { role, content };
+      })
+      .filter((m) => m.content.trim() !== '');
+  }
+
+  // Basic safety bounds: keep requests small and predictable.
+  const MAX_HISTORY = 10;
+  history = history.slice(-MAX_HISTORY);
+
+  const chat = new GeminiChatService();
+  const reply = await chat.generateReply({
+    systemPrompt: AI_ANALYST_SYSTEM_PROMPT,
+    userMessage: message,
+    history,
+  });
+
+  res.json({
+    success: true,
+    data: {
+      message: reply,
+    },
+  });
+}));
+
+router.post('/chat/stream', ErrorHandler.asyncHandler(async (req: Request, res: Response) => {
+  const body = (req.body || {}) as {
+    message?: unknown;
+    history?: unknown;
+  };
+
+  const message = typeof body.message === 'string' ? body.message.trim() : '';
+  if (!message) {
+    res.status(400).json({
+      success: false,
+      error: 'Missing required field: message',
+    });
+    return;
+  }
+
+  let history: GeminiChatMessage[] = [];
+  if (Array.isArray(body.history)) {
+    history = body.history
+      .filter((m) => m && typeof m === 'object')
+      .map((m) => {
+        const mm = m as Record<string, unknown>;
+        const role: GeminiChatMessage['role'] = mm.role === 'assistant' ? 'assistant' : 'user';
+        const content = typeof mm.content === 'string' ? mm.content : '';
+        return { role, content };
+      })
+      .filter((m) => m.content.trim() !== '');
+  }
+
+  const MAX_HISTORY = 10;
+  history = history.slice(-MAX_HISTORY);
+
+  // Generate the full reply first (simpler + reliable), then stream it to the UI
+  // in small chunks to preserve the "typing" feel.
+  const chat = new GeminiChatService();
+  const reply = await chat.generateReply({
+    systemPrompt: AI_ANALYST_SYSTEM_PROMPT,
+    userMessage: message,
+    history,
+  });
+
+  res.status(200);
+  res.setHeader('Content-Type', 'text/event-stream');
+  res.setHeader('Cache-Control', 'no-cache, no-transform');
+  res.setHeader('Connection', 'keep-alive');
+  res.flushHeaders?.();
+
+  const chunkSize = 40;
+  for (let i = 0; i < reply.length; i += chunkSize) {
+    const content = reply.slice(i, i + chunkSize);
+    res.write(`data: ${JSON.stringify({ content, done: false })}\n\n`);
+  }
+  res.write('data: [DONE]\n\n');
+  res.end();
+}));
 
 router.get('/anomaly/current', ErrorHandler.asyncHandler(async (_req: Request, res: Response) => {
   const prediction = await operatorMLService.detectOperatorAnomaly();

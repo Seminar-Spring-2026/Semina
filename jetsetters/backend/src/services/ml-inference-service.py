@@ -110,7 +110,8 @@ def predict():
 if __name__ == '__main__':
     port = int(os.environ.get('ML_SERVICE_PORT', 5050))
     if load_model():
-        app.run(host='0.0.0.0', port=port, debug=False)
+        host = os.environ.get('ML_SERVICE_HOST', '127.0.0.1')
+        app.run(host=host, port=port, debug=False)
     else:
         print("Failed to load model. Exiting.", file=sys.stderr)
         sys.exit(1)

@@ -9,6 +9,8 @@ import { fileURLToPath } from 'url';
 import adminRoutes from './routes/admin.routes.js';
 import { operatorDataService } from './services/operator-data.service.js';
 import { ErrorHandler } from './middleware/error-handler.middleware.js';
+import { requireFirebaseAuth } from './middleware/firebase-auth.middleware.js';
+import { createRateLimiter } from './middleware/rate-limit.middleware.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -26,9 +28,12 @@ const allowedOrigins = [
 app.use(cors({
   origin: allowedOrigins,
   credentials: true,
+  allowedHeaders: ['Content-Type', 'Authorization'],
 }));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+
+// Keep payload sizes predictable (chat history, etc.)
+app.use(express.json({ limit: '1mb' }));
+app.use(express.urlencoded({ extended: true, limit: '1mb' }));
 
 app.use((req: Request, _res: Response, next: NextFunction) => {
   console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
@@ -43,7 +48,14 @@ app.get('/health', (_req: Request, res: Response) => {
   });
 });
 
-app.use('/api/admin', adminRoutes);
+// Baseline rate limits (per IP). Chat is tighter than general admin polling.
+const adminLimiter = createRateLimiter({ windowMs: 60_000, limit: 300 });
+const chatLimiter = createRateLimiter({ windowMs: 60_000, limit: 30 });
+
+app.use('/api/admin/chat', chatLimiter);
+app.use('/api/admin/chat/stream', chatLimiter);
+
+app.use('/api/admin', adminLimiter, requireFirebaseAuth, adminRoutes);
 app.use(ErrorHandler.handle);
 
 const updateInterval = parseInt(process.env.DATA_UPDATE_INTERVAL_MS || '60000', 10);

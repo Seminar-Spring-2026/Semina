@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import ChatMessage from '../../components/admin/ChatMessage';
 import ModelOutput from '../../components/admin/ModelOutput';
 import LogDataPanel from '../../components/admin/LogDataPanel';
-import { openAIService } from '../../services/openai.service';
+import { adminApi, type ChatHistoryMessage } from '../../services/adminApi';
 import { chatbotConfig } from '../../config/chatbot.config';
 import './AIAnalystChat.css';
 
@@ -59,16 +59,14 @@ function AIAnalystChat() {
       setInputValue('');
       setIsLoading(true);
 
-      if (!openAIService.isConfigured()) {
-        const errorMessage: Message = {
-          id: (Date.now() + 1).toString(),
-          role: 'ai',
-          content: '⚠️ OpenAI API key not configured. Please add your API key to the .env file and restart the server.\n\nAdd this to frontend/.env:\nVITE_OPENAI_API_KEY=your-api-key-here',
-        };
-        setMessages((prev) => [...prev, errorMessage]);
-        setIsLoading(false);
-        return;
-      }
+      const history: ChatHistoryMessage[] = messages
+        .filter((m) => m.role === 'user' || m.role === 'ai')
+        .filter((m) => m.content.trim() !== '')
+        .slice(-10)
+        .map((m) => ({
+          role: m.role === 'ai' ? 'assistant' : 'user',
+          content: m.content,
+        }));
 
       if (chatbotConfig.hyperparameters.streamResponse) {
         setIsStreaming(true);
@@ -84,7 +82,7 @@ function AIAnalystChat() {
         setMessages((prev) => [...prev, streamingMessage]);
 
         try {
-          const stream = openAIService.streamMessage(userMessage);
+          const stream = adminApi.chatStream(userMessage, history);
 
           for await (const chunk of stream) {
             if (!chunk.done && chunk.content) {
@@ -104,32 +102,35 @@ function AIAnalystChat() {
             }
           }
         } catch (error: unknown) {
-          console.error('Streaming error:', error);
           const message = error instanceof Error ? error.message : 'Failed to get response';
           setMessages((prev) => 
-            prev.map((msg) =>
-              msg.id === streamingMessageId
-                ? { ...msg, content: `Error: ${message}` }
-                : msg
-            )
+            prev.map((m) => (m.id === streamingMessageId ? { ...m, content: `Error: ${message}` } : m))
           );
         }
 
         setIsStreaming(false);
         setIsLoading(false);
       } else {
-        const response = await openAIService.sendMessage(userMessage);
-
-        const aiResponse: Message = {
-          id: (Date.now() + 1).toString(),
-          role: 'ai',
-          content: response.success 
-            ? response.message || 'No response received'
-            : `Error: ${response.error || 'Failed to get response'}`,
-        };
-
-        setMessages((prev) => [...prev, aiResponse]);
-        setIsLoading(false);
+        try {
+          const result = await adminApi.chat(userMessage, history);
+          const aiResponse: Message = {
+            id: (Date.now() + 1).toString(),
+            role: 'ai',
+            content: result.message || 'No response received',
+          };
+          setMessages((prev) => [...prev, aiResponse]);
+        } catch (error: unknown) {
+          const msg = error instanceof Error ? error.message : 'Failed to get response';
+          const errorMessage: Message = {
+            id: (Date.now() + 1).toString(),
+            role: 'ai',
+            content: `Error: ${msg}`,
+          };
+          setMessages((prev) => [...prev, errorMessage]);
+        } finally {
+          setIsStreaming(false);
+          setIsLoading(false);
+        }
       }
     }
   };
@@ -142,29 +143,33 @@ function AIAnalystChat() {
   const handleGenerateSummary = async () => {
     setIsLoading(true);
     const summaryPrompt = 'Generate a comprehensive incident summary based on current anomalies, alerts, and system status. Include severity assessment, affected areas, and recommended actions.';
-    
-    if (!openAIService.isConfigured()) {
-      alert('OpenAI API key not configured. Please add your API key to the .env file.');
-      setIsLoading(false);
-      return;
-    }
 
-    const response = await openAIService.sendMessage(summaryPrompt);
-    
-    if (response.success && response.message) {
+    try {
+      const history: ChatHistoryMessage[] = messages
+        .filter((m) => m.role === 'user' || m.role === 'ai')
+        .filter((m) => m.content.trim() !== '')
+        .slice(-10)
+        .map((m) => ({
+          role: m.role === 'ai' ? 'assistant' : 'user',
+          content: m.content,
+        }));
+
+      const result = await adminApi.chat(summaryPrompt, history);
       const summaryMessage: Message = {
         id: Date.now().toString(),
         role: 'ai',
-        content: `**Incident Summary:**\n\n${response.message}`,
+        content: `**Incident Summary:**\n\n${result.message}`,
       };
       setMessages((prev) => [...prev, summaryMessage]);
+    } catch (error: unknown) {
+      const msg = error instanceof Error ? error.message : 'Failed to get response';
+      alert(msg);
+    } finally {
+      setIsLoading(false);
     }
-    
-    setIsLoading(false);
   };
 
   const handleClearChat = () => {
-    openAIService.clearHistory();
     setMessages([
       {
         id: '1',
