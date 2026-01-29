@@ -14,6 +14,8 @@ function Login({ onLoginSuccess, onNavigateToSignup }: LoginProps) {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [resetEmailSent, setResetEmailSent] = useState(false);
+  const [resetLoading, setResetLoading] = useState(false);
 
   useEffect(() => {
     // Initialize invisible reCAPTCHA
@@ -51,6 +53,27 @@ function Login({ onLoginSuccess, onNavigateToSignup }: LoginProps) {
     }
   };
 
+  const handleForgotPassword = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (!email) {
+      setError('Please enter your email address first');
+      return;
+    }
+    
+    setError('');
+    setResetLoading(true);
+    setResetEmailSent(false);
+    
+    const result = await adminFirebaseAuth.sendPasswordReset(email);
+    setResetLoading(false);
+    
+    if (result.success) {
+      setResetEmailSent(true);
+    } else {
+      setError(result.error || 'Failed to send password reset email');
+    }
+  };
+
   return (
     <div className="login-container">
       <div className="login-card">
@@ -66,6 +89,11 @@ function Login({ onLoginSuccess, onNavigateToSignup }: LoginProps) {
 
         <form onSubmit={handleSubmit} className="login-form">
           {error && <div className="error-message">{error}</div>}
+          {resetEmailSent && (
+            <div className="success-message" style={{ color: '#4caf50', marginBottom: '1rem' }}>
+              Password reset email sent! Check your inbox and follow the instructions.
+            </div>
+          )}
           
           <div className="form-group">
             <label htmlFor="email" className="form-label">
@@ -103,8 +131,13 @@ function Login({ onLoginSuccess, onNavigateToSignup }: LoginProps) {
             {loading ? 'Signing in...' : 'Log In'}
           </button>
 
-          <a href="#" className="forgot-password-link">
-            Forgot password?
+          <a 
+            href="#" 
+            className="forgot-password-link"
+            onClick={handleForgotPassword}
+            style={{ pointerEvents: resetLoading ? 'none' : 'auto' }}
+          >
+            {resetLoading ? 'Sending reset email...' : 'Forgot password?'}
           </a>
 
           <div className="navigation-links">

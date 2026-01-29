@@ -41,7 +41,11 @@ function AppContent() {
     setFlowType('signup')
     setVerificationId(verificationId || '')
     setUserId(userId || '')
-    navigate('/admin/twofa-signup')
+    if (verificationId) {
+      navigate('/admin/twofa-signup')
+    } else {
+      navigate('/admin/dashboard')
+    }
   }
 
   const handleLoginSuccess = async (email: string, resolver?: MultiFactorResolver) => {

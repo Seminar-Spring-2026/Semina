@@ -39,8 +39,8 @@ function Signup({ onSignupSuccess, onNavigateToLogin }: SignupProps) {
       return;
     }
 
-    if (!phoneNumber.match(/^\+[1-9]\d{1,14}$/)) {
-      setError('Please enter a valid phone number (e.g., +1234567890)');
+    if (phoneNumber && !phoneNumber.match(/^\+[1-9]\d{1,14}$/)) {
+      setError('Please enter a valid phone number (e.g., +1234567890) or leave blank');
       return;
     }
 
@@ -55,23 +55,30 @@ function Signup({ onSignupSuccess, onNavigateToLogin }: SignupProps) {
       return;
     }
 
-    // Step 2: Enroll MFA with phone number
-    const enrollResult = await adminFirebaseAuth.enrollMFA(
-      signupResult.user,
-      phoneNumber,
-      'recaptcha-container-signup'
-    );
+    // Step 2: Optionally enroll MFA (skip if SMS MFA not enabled in Firebase)
+    if (phoneNumber) {
+      const enrollResult = await adminFirebaseAuth.enrollMFA(
+        signupResult.user,
+        phoneNumber,
+        'recaptcha-container-signup'
+      );
 
-    setLoading(false);
-
-    if (!enrollResult.success) {
-      setError(enrollResult.error || 'Failed to send verification code. Please try again.');
-      return;
+      if (enrollResult.success && enrollResult.verificationId && onSignupSuccess) {
+        setLoading(false);
+        onSignupSuccess(email, enrollResult.verificationId, signupResult.user.uid);
+        return;
+      }
+      // If MFA not enabled in project (e.g. auth/operation-not-allowed), continue without MFA
+      if (enrollResult.error && !enrollResult.error.includes('operation-not-allowed') && !enrollResult.error.includes('SMS')) {
+        setLoading(false);
+        setError(enrollResult.error || 'Failed to send verification code. Please try again.');
+        return;
+      }
     }
 
-    
-    if (onSignupSuccess && enrollResult.verificationId) {
-      onSignupSuccess(email, enrollResult.verificationId, signupResult.user.uid);
+    setLoading(false);
+    if (onSignupSuccess) {
+      onSignupSuccess(email, undefined, signupResult.user.uid);
     }
   };
 
@@ -83,7 +90,7 @@ function Signup({ onSignupSuccess, onNavigateToLogin }: SignupProps) {
         </div>
         
         <h1 className="signup-title">Create Account</h1>
-        <p className="signup-subtitle">Secure your account with SMS verification</p>
+        <p className="signup-subtitle">Create an account. SMS 2FA is optional.</p>
         
         {/* Hidden reCAPTCHA container */}
         <div id="recaptcha-container-signup"></div>
@@ -109,19 +116,18 @@ function Signup({ onSignupSuccess, onNavigateToLogin }: SignupProps) {
 
           <div className="form-group">
             <label htmlFor="phoneNumber" className="form-label">
-              Phone Number (for SMS verification)
+              Phone Number (optional, for SMS 2FA)
             </label>
             <input
               type="tel"
               id="phoneNumber"
               className="form-input"
-              placeholder="+1234567890"
+              placeholder="+1234567890 or leave blank"
               value={phoneNumber}
               onChange={(e) => setPhoneNumber(e.target.value)}
-              required
               disabled={loading}
             />
-            <small className="input-hint">Include country code (e.g., +1 for US)</small>
+            <small className="input-hint">Include country code. Leave blank to skip 2FA.</small>
           </div>
 
           <div className="form-group">

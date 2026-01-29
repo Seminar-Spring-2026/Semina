@@ -7,6 +7,7 @@ import {
   multiFactor,
   getMultiFactorResolver,
   signOut,
+  sendPasswordResetEmail,
 } from 'firebase/auth';
 import type { 
   User, 
@@ -258,6 +259,17 @@ export const adminFirebaseAuth = {
   // Get enrolled MFA factors
   getEnrolledFactors: (user: User) => {
     return multiFactor(user).enrolledFactors;
+  },
+
+  // Send password reset email
+  sendPasswordReset: async (email: string): Promise<AuthResult> => {
+    try {
+      await sendPasswordResetEmail(auth, email);
+      return { success: true };
+    } catch (error: unknown) {
+      console.error('Password reset error:', error);
+      return { success: false, error: getErrorMessage(error) };
+    }
   },
 
   // Clear reCAPTCHA
