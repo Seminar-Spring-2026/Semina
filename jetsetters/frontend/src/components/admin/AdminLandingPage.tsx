@@ -1,4 +1,5 @@
 import sentraLogo from '../../assets/sentra_logo.png';
+import waterImg from '../../assets/water3D.png';
 import './AdminLandingPage.css';
 
 interface AdminLandingPageProps {
@@ -20,14 +21,39 @@ function AdminLandingPage({ onEnterAdmin }: AdminLandingPageProps) {
         </header>
 
         <main className="landing-main">
-          <div className="hero-section">
-            <h1 className="hero-title">
-              Intelligent Water Quality
-              <span className="gradient-text"> Monitoring</span>
-            </h1>
-            <p className="hero-subtitle">
-              AI-powered anomaly detection and predictive analytics for municipal water infrastructure
-            </p>
+          <div className='hero-container'>
+            <div className="hero-section">
+              <h1 className="hero-title">
+                Intelligent Water Quality
+                <span className="gradient-text"> Monitoring</span>
+              </h1>
+              <p className="hero-subtitle">
+                AI-powered anomaly detection and predictive analytics for municipal water infrastructure
+              </p>
+              <button className="enter-admin-btn" onClick={onEnterAdmin}>
+                <span>Enter Operator Dashboard</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                  <polyline points="12 5 19 12 12 19" />
+                </svg>
+              </button>
+            </div>
+            <img src={waterImg} alt="Water 3D Illustration" className="water-img" />
+          </div>
+
+          <div className="stats-section">
+            <div className="stat-item">
+              <div className="stat-number">99.1%</div>
+              <div className="stat-label">Detection Accuracy</div>
+            </div>
+            <div className="stat-item">
+              <div className="stat-number">145+</div>
+              <div className="stat-label">Monitored Parameters</div>
+            </div>
+            <div className="stat-item">
+              <div className="stat-number">24/7</div>
+              <div className="stat-label">System Uptime</div>
+            </div>
           </div>
 
           <div className="features-grid">
@@ -74,29 +100,6 @@ function AdminLandingPage({ onEnterAdmin }: AdminLandingPageProps) {
               <p>AI-powered forensic analysis and root cause identification for rapid incident response</p>
             </div>
           </div>
-
-          <div className="stats-section">
-            <div className="stat-item">
-              <div className="stat-number">99.1%</div>
-              <div className="stat-label">Detection Accuracy</div>
-            </div>
-            <div className="stat-item">
-              <div className="stat-number">145+</div>
-              <div className="stat-label">Monitored Parameters</div>
-            </div>
-            <div className="stat-item">
-              <div className="stat-number">24/7</div>
-              <div className="stat-label">System Uptime</div>
-            </div>
-          </div>
-
-          <button className="enter-admin-btn" onClick={onEnterAdmin}>
-            <span>Enter Operator Dashboard</span>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <line x1="5" y1="12" x2="19" y2="12" />
-              <polyline points="12 5 19 12 12 19" />
-            </svg>
-          </button>
 
           <p className="security-notice">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

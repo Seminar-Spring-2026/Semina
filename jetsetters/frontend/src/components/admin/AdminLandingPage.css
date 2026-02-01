@@ -82,11 +82,11 @@
 }
 
 .landing-header {
-  margin-bottom: 60px;
+  align-self: flex-start;
 }
 
 .landing-logo {
-  height: 60px;
+  height: 100px;
   object-fit: contain;
   filter: brightness(0) saturate(100%) invert(67%) sepia(48%) saturate(449%) hue-rotate(122deg) brightness(94%) contrast(88%);
   animation: pulse-glow 3s ease-in-out infinite;
@@ -106,13 +106,27 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 60px;
+  gap: 100px;
+}
+
+.hero-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 90%;
 }
 
 .hero-section {
-  text-align: center;
-  max-width: 900px;
+  justify-self: start;
 }
+
+.water-img {
+  width: 100%;
+  max-width: 500px;
+  border-radius: 16px;
+}
+
 
 .hero-title {
   font-size: 56px;
@@ -158,7 +172,7 @@
 }
 
 .feature-card {
-  background: rgba(36, 147, 217, 0.4);
+  background: #d5e7f8;
   backdrop-filter: blur(12px);
   border: 1px solid rgba(0, 212, 255, 0.2);
   border-radius: 20px;
@@ -220,16 +234,14 @@
 
 .stats-section {
   display: flex;
-  gap: 60px;
-  justify-content: center;
+  justify-content: space-around;
   flex-wrap: wrap;
   padding: 40px;
-  background: rgba(35, 155, 230, 0.4);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(0, 212, 255, 0.2);
+  border: 4px solid rgba(0, 212, 255, 0.2);
   border-radius: 20px;
   width: 100%;
-  max-width: 900px;
+  max-width: 90%;
 }
 
 .stat-item {
@@ -274,6 +286,7 @@
   position: relative;
   overflow: hidden;
   font-family: 'Ubuntu', sans-serif;
+  margin-top: 30px;
 }
 
 .enter-admin-btn::before {
