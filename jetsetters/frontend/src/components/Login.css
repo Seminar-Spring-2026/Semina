@@ -9,33 +9,27 @@
   overflow: hidden;
   font-family: 'Ubuntu', sans-serif;
   
-  background:
-    radial-gradient(ellipse at top left, rgba(157, 78, 221, 0.15), transparent 50%),
-    radial-gradient(ellipse at bottom right, rgba(0, 212, 255, 0.15), transparent 50%),
-    radial-gradient(ellipse at top right, rgba(255, 0, 110, 0.1), transparent 50%),
-    linear-gradient(135deg, var(--bg-gradient-dark-1, #020617) 0%, var(--bg-gradient-dark-2, #0f172a) 40%, var(--bg-gradient-dark-3, #1e293b) 100%);
-}
+  background: white}
 
 .login-card {
   background: rgba(15, 23, 42, 0.6);
   backdrop-filter: blur(16px);
   border: 1px solid rgba(0, 212, 255, 0.2);
   border-radius: 20px;
-  padding: 48px;
+  padding: 40px;
   width: 100%;
-  max-width: 450px;
+  max-width: 500px; 
   position: relative;
   overflow: hidden;
-  box-shadow: 
-    0 12px 48px rgba(0, 0, 0, 0.5),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  z-index: 10;
 }
 
 .login-card:hover {
-  border-color: rgba(0, 212, 255, 0.4);
-  box-shadow: 0 12px 48px rgba(0, 136, 255, 0.15);
+  position: relative;
+  overflow: hidden; 
+  transform: translateZ(-40px); /* Lift card */
+  box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  z-index: 10;
 }
 
 .login-card::before {
@@ -45,7 +39,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, rgba(0, 212, 255, 0.05), rgba(157, 78, 221, 0.05));
+  background: rgba(255, 255, 255, 0.05);
   pointer-events: none;
 }
 
@@ -90,7 +84,7 @@
   font-family: 'Ubuntu', sans-serif;
   font-size: 16px;
   font-weight: 300;
-  color: #94a3b8; 
+  color: #c8cdd5; 
   text-align: center;
   margin: 0 0 32px 0;
 }
@@ -151,11 +145,7 @@
   position: relative;
   overflow: hidden;
   transition: all 0.3s ease;
-  
-  background: linear-gradient(135deg, var(--accent-muted-blue-gray, #64748b), var(--accent-dark-cyan-blue, #0e7490));
-  box-shadow: 
-    0 8px 32px rgba(89, 160, 227, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  background: #465D70;
 }
 
 .login-button::before {
@@ -172,7 +162,7 @@
 .login-button:hover {
   transform: translateY(-2px);
   box-shadow: 
-    0 12px 48px rgba(0, 136, 255, 0.3),
+    0 2px 8px rgba(0, 136, 255, 0.3),
     inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 
