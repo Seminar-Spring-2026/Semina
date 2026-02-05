@@ -1,15 +1,12 @@
 .alert-list-container {
-  background: 
-    linear-gradient(135deg, rgba(26, 26, 46, 0.6), rgba(15, 52, 96, 0.4)),
-    rgba(26, 26, 46, 0.4);
+  background: #A9D1F0;
   backdrop-filter: blur(12px);
   border: 1px solid;
-  border-image: linear-gradient(135deg, rgba(0, 212, 255, 0.3), rgba(157, 78, 221, 0.2)) 1;
+  border-image: #000000;
   border-radius: 12px;
   padding: 20px;
   box-shadow: 
-    0 4px 20px rgba(0, 212, 255, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    #000000;
   position: relative;
   overflow: hidden;
 }
@@ -21,15 +18,10 @@
   left: -50%;
   width: 100%;
   height: 100%;
-  background: radial-gradient(circle, rgba(157, 78, 221, 0.08), transparent 60%);
   pointer-events: none;
 }
 
-[data-theme="light"] .alert-list-container {
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-}
+
 
 .alert-list-title {
   font-family: 'Ubuntu', sans-serif;

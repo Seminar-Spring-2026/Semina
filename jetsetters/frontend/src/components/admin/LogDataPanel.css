@@ -1,7 +1,6 @@
 .log-data-panel {
   background: 
-    linear-gradient(135deg, rgba(26, 26, 46, 0.6), rgba(15, 52, 96, 0.4)),
-    rgba(26, 26, 46, 0.4);
+    #A9D1F0;
   backdrop-filter: blur(12px);
   border: 1px solid;
   border-image: linear-gradient(135deg, rgba(0, 212, 255, 0.3), rgba(157, 78, 221, 0.2)) 1;
@@ -24,7 +23,7 @@
   right: -40%;
   width: 80%;
   height: 80%;
-  background: radial-gradient(circle, rgba(157, 78, 221, 0.08), transparent 60%);
+  background: #A9D1F0;
   pointer-events: none;
 }
 

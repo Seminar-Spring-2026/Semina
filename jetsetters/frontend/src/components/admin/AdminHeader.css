@@ -1,7 +1,6 @@
 .admin-header {
   background: 
-    linear-gradient(90deg, rgba(26, 26, 46, 0.7) 0%, rgba(15, 52, 96, 0.6) 50%, rgba(26, 26, 46, 0.7) 100%),
-    rgba(10, 14, 39, 0.5);
+    #3B4D5E;
   backdrop-filter: blur(16px);
   border-bottom: 1px solid;
   border-image: linear-gradient(90deg, rgba(157, 78, 221, 0.2), rgba(0, 212, 255, 0.3), rgba(157, 78, 221, 0.2)) 1;
