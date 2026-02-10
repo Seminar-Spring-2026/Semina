@@ -1,15 +1,11 @@
 .model-output {
-  background: 
-    #A9D1F0;
+  background: #ffffff;
   backdrop-filter: blur(12px);
-  border: 1px solid;
-  border-image: linear-gradient(135deg, rgba(0, 212, 255, 0.3), #9d4edd33) 1;
+  border: 1px solid #E2E8F0;
   border-radius: 12px;
   padding: 20px;
   margin-bottom: 20px;
-  box-shadow: 
-    0 4px 20px rgba(0, 212, 255, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  box-shadow: 0 2px 2px rgba(0,0,0,0.05);
   position: relative;
   overflow: hidden;
 }
@@ -21,7 +17,6 @@
   left: -30%;
   width: 80%;
   height: 80%;
-  background: #A9D1F0;
   pointer-events: none;
 }
 
@@ -35,7 +30,7 @@
   font-family: 'Ubuntu', sans-serif;
   font-size: 16px;
   font-weight: 600;
-  color: #ffffff;
+  color: #384959;
   margin: 0 0 16px 0;
 }
 
@@ -59,14 +54,14 @@
   font-family: 'Ubuntu', sans-serif;
   font-size: 13px;
   font-weight: 400;
-  color: #a0a0a0;
+  color: #3a4856;
 }
 
 .output-value {
   font-family: 'Ubuntu', sans-serif;
   font-size: 14px;
   font-weight: 600;
-  color: #ffffff;
+  color: #3a4856;
   word-wrap: break-word;
   overflow-wrap: break-word;
 }
@@ -77,7 +72,7 @@
 
 .output-value.timestamp {
   font-weight: 400;
-  color: #e0e0e0;
+  color: #3a485696;
   font-size: 13px;
 }
 

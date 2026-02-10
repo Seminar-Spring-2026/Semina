@@ -100,7 +100,7 @@ function SchematicWidget({ title = 'Water Network Schematic', componentStatus = 
           <circle cx="250" cy="150" r="5" fill="#14b8a6" />
           
           {/* Labels */}
-          <text x="200" y="30" fill="#ffffff" fontSize="12" textAnchor="middle" fontFamily="Ubuntu">Water Network Overview</text>
+          <text x="200" y="30" fill="#3a4856" fontSize="12" textAnchor="middle" fontFamily="Ubuntu">Water Network Overview</text>
           {pu1Alert && (
             <text x="200" y="280" fill="#ef4444" fontSize="11" textAnchor="middle" fontFamily="Ubuntu">⚠ Alert: Pump PU1</text>
           )}

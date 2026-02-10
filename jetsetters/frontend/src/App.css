@@ -12,7 +12,6 @@
   height: 200%;
   background: 
     white;
-  animation: rotate-gradient 30s linear infinite;
   pointer-events: none;
   z-index: 0;
 }
