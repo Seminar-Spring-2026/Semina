@@ -8,34 +8,21 @@
   position: relative;
   overflow: hidden;
   font-family: 'Ubuntu', sans-serif;
-  
-  background:
-    radial-gradient(ellipse at top left, rgba(157, 78, 221, 0.15), transparent 50%),
-    radial-gradient(ellipse at bottom right, rgba(0, 212, 255, 0.15), transparent 50%),
-    radial-gradient(ellipse at top right, rgba(255, 0, 110, 0.1), transparent 50%),
-    linear-gradient(135deg, var(--bg-gradient-dark-1, #020617) 0%, var(--bg-gradient-dark-2, #0f172a) 40%, var(--bg-gradient-dark-3, #1e293b) 100%);
+  background: #EDF2F7;
 }
 
 .login-card {
-  background: rgba(15, 23, 42, 0.6);
+  background: #ffffff;
   backdrop-filter: blur(16px);
-  border: 1px solid rgba(0, 212, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 20px;
   padding: 48px;
   width: 100%;
   max-width: 450px;
   position: relative;
   overflow: hidden;
-  box-shadow: 
-    0 12px 48px rgba(0, 0, 0, 0.5),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
   z-index: 10;
-}
-
-.login-card:hover {
-  border-color: rgba(0, 212, 255, 0.4);
-  box-shadow: 0 12px 48px rgba(0, 136, 255, 0.15);
 }
 
 .login-card::before {
@@ -45,7 +32,6 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, rgba(0, 212, 255, 0.05), rgba(157, 78, 221, 0.05));
   pointer-events: none;
 }
 
@@ -53,7 +39,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 32px;
 }
 
 .auth-logo {
@@ -77,12 +62,10 @@
   font-family: 'Ubuntu', sans-serif;
   font-size: 32px;
   font-weight: 700;
-  color: #ffffff;
+  color: #09263e;
   text-align: center;
   margin: 0 0 12px 0;
-  background: linear-gradient(135deg, #e2e8f0, #94a3b8);
   -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
@@ -90,7 +73,7 @@
   font-family: 'Ubuntu', sans-serif;
   font-size: 16px;
   font-weight: 300;
-  color: #94a3b8; 
+  color: #3a4856; 
   text-align: center;
   margin: 0 0 32px 0;
 }
@@ -107,35 +90,34 @@
   gap: 8px;
 }
 
-.form-label {
+label.form-label {
   font-family: 'Ubuntu', sans-serif;
   font-size: 14px;
   font-weight: 500;
-  color: #e2e8f0;
+  color: #384959;
   letter-spacing: 0.02em;
 }
 
-.form-input {
+input.form-input {
   font-family: 'Ubuntu', sans-serif;
   font-size: 14px;
   padding: 14px 16px;
-  background: rgba(2, 6, 23, 0.5); 
+  background: #e5e7eb; 
   backdrop-filter: blur(8px);
-  border: 1px solid rgba(0, 212, 255, 0.15);
   border-radius: 12px;
-  color: #ffffff;
+  color: #384959;
+  border: none;
   transition: all 0.3s ease;
 }
 
-.form-input::placeholder {
-  color: #475569;
+input.form-input::placeholder {
+  color: #3a48567e;
 }
 
-.form-input:focus {
+input.form-input:focus {
   outline: none;
-  border-color: rgba(0, 212, 255, 0.6);
-  background: rgba(15, 23, 42, 0.8);
-  box-shadow: 0 0 20px rgba(0, 212, 255, 0.1);
+  background: #6b86a141;
+  color: #384959;
 }
 
 .login-button {
@@ -150,34 +132,13 @@
   cursor: pointer;
   position: relative;
   overflow: hidden;
-  transition: all 0.3s ease;
-  
-  background: linear-gradient(135deg, var(--accent-muted-blue-gray, #64748b), var(--accent-dark-cyan-blue, #0e7490));
-  box-shadow: 
-    0 8px 32px rgba(89, 160, 227, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
-}
-
-.login-button::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-  transition: left 0.5s ease;
+  background: #09263e;
 }
 
 .login-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 
-    0 12px 48px rgba(0, 136, 255, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.3);
-}
-
-.login-button:hover::before {
-  left: 100%;
+  border: 2px solid #09263e;;
+  color: #09263e;
+  background: transparent;
 }
 
 .login-button:disabled {
@@ -189,14 +150,14 @@
 .forgot-password-link {
   font-family: 'Ubuntu', sans-serif;
   font-size: 14px;
-  color: #ffffff;
+  color: #3a4856;
   text-align: center;
   text-decoration: none;
   transition: color 0.3s ease;
 }
 
 .forgot-password-link:hover {
-  color: #38bdf8; 
+  color: #138cc0; 
 }
 
 .error-message {
@@ -217,17 +178,17 @@
   margin-top: 16px;
 }
 
-.nav-text {
+span.nav-text {
   font-family: 'Ubuntu', sans-serif;
   font-size: 14px;
-  color: #64748b;
+  color: #3a4856;
 }
 
-.nav-link {
+button.nav-link {
   font-family: 'Ubuntu', sans-serif;
   font-size: 14px;
   font-weight: 500;
-  color: #ffffff; 
+  color: #698097; 
   background: none;
   border: none;
   cursor: pointer;
@@ -236,9 +197,9 @@
   text-decoration: none;
 }
 
-.nav-link:hover {
-  color: #38bdf8;
-  text-decoration: underline;
+button.nav-link:hover {
+  color: #138cc0;
+  text-decoration: none;
 }
 
 @media (max-width: 768px) {
