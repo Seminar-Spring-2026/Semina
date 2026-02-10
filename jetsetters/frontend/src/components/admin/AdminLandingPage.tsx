@@ -1,4 +1,4 @@
-import sentraLogo from '../../assets/sentra_logo.png';
+import seminaLogo from '../../assets/semina_log_bg_removed.png';
 import './AdminLandingPage.css';
 
 interface AdminLandingPageProps {
@@ -16,7 +16,7 @@ function AdminLandingPage({ onEnterAdmin }: AdminLandingPageProps) {
 
       <div className="landing-content">
         <header className="landing-header">
-          <img src={sentraLogo} alt="Sentra" className="landing-logo" />
+          <img src={seminaLogo} alt="semina" className="landing-logo" />
         </header>
 
         <main className="landing-main">
@@ -108,7 +108,7 @@ function AdminLandingPage({ onEnterAdmin }: AdminLandingPageProps) {
         </main>
 
         <footer className="landing-footer">
-          <p>© 2025 Sentra. Protecting municipal water infrastructure with AI.</p>
+          <p>© 2025 semina. Protecting municipal water infrastructure with AI.</p>
         </footer>
       </div>
     </div>

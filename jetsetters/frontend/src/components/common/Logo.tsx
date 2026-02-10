@@ -1,6 +1,6 @@
 import './Logo.css';
 import sentraIcon from '../../assets/sentra_icon.png';
-import seminaLogo from '../../assets/semina_logo.png';
+import seminaLogo from '../../assets/semina_log_bg_removed.png';
 
 interface LogoProps {
   size?: 'small' | 'medium' | 'large';

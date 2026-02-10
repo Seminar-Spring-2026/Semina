@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { adminFirebaseAuth } from '../services/adminFirebaseAuth';
 import type { MultiFactorResolver } from 'firebase/auth';
-import sentraLogo from '../assets/sentra_logo.png';
+import seminaLogo from '../assets/semina_log_bg_removed.png';
 import './Login.css';
 
 interface LoginProps {
@@ -78,7 +78,7 @@ function Login({ onLoginSuccess, onNavigateToSignup }: LoginProps) {
     <div className="login-container">
       <div className="login-card">
         <div className="logo-section">
-          <img src={sentraLogo} alt="Sentra" className="auth-logo" />
+          <img src={seminaLogo} alt="semina" className="auth-logo" />
         </div>
         
         <h1 className="login-title">Welcome</h1>

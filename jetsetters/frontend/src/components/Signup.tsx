@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { adminFirebaseAuth } from '../services/adminFirebaseAuth';
-import sentraLogo from '../assets/sentra_logo.png';
+import seminaLogo from '../assets/semina_log_bg_removed.png';
 import './Signup.css';
 
 interface SignupProps {
@@ -86,7 +86,7 @@ function Signup({ onSignupSuccess, onNavigateToLogin }: SignupProps) {
     <div className="signup-container">
       <div className="signup-card">
         <div className="logo-section">
-          <img src={sentraLogo} alt="Sentra" className="auth-logo" />
+          <img src={seminaLogo} alt="semina" className="auth-logo" />
         </div>
         
         <h1 className="signup-title">Create Account</h1>
