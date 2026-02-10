@@ -2,15 +2,16 @@
   display: flex;
   min-height: 100vh;
   font-family: 'Ubuntu', sans-serif;
+  background-color: #EDF2F7;
 }
 
-[data-theme="dark"] .admin-layout {
+/* [data-theme="dark"] .admin-layout {
   background: transparent;
 }
 
 [data-theme="light"] .admin-layout {
   background: var(--bg-primary-light);
-}
+} */
 
 .admin-main {
   flex: 1;
@@ -101,8 +102,8 @@
   text-align: center;
   font-family: 'Ubuntu', sans-serif;
   font-size: 13px;
-  color: #666666;
-  background: rgba(10, 14, 39, 0.3);
+  color: #ffffff;
+  background: #2a3c4e;
   backdrop-filter: blur(8px);
   border-top: 1px solid rgba(0, 212, 255, 0.2);
 }

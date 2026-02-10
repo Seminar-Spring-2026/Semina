@@ -1,6 +1,6 @@
 import './Logo.css';
 import sentraIcon from '../../assets/sentra_icon.png';
-import sentraLogo from '../../assets/sentra_logo.png';
+import seminaLogo from '../../assets/semina_log_bg_removed.png';
 
 interface LogoProps {
   size?: 'small' | 'medium' | 'large';
@@ -12,7 +12,7 @@ function Logo({ size = 'medium', showText = true, useFullLogo = false }: LogoPro
   if (useFullLogo) {
     return (
       <div className={`logo-component ${size} full-logo`}>
-        <img src={sentraLogo} alt="Sentra" className="logo-image-full" />
+        <img src={seminaLogo} alt="Sentra" className="logo-image-full" />
       </div>
     );
   }
@@ -22,7 +22,7 @@ function Logo({ size = 'medium', showText = true, useFullLogo = false }: LogoPro
       <div className="logo-image-container">
         <img src={sentraIcon} alt="Sentra" className="logo-image" />
       </div>
-      {showText && <span className="logo-text">Sentra</span>}
+      {showText && <span className="logo-text">Semina</span>}
     </div>
   );
 }

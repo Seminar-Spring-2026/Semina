@@ -15,18 +15,20 @@
   --card-bg-light: #ffffff;
   --border-light: #e5e7eb;
   
-  --bg-gradient-dark-1: #0a0e27;
-  --bg-gradient-dark-2: #16213e;
-  --bg-gradient-dark-3: #0f3460;
-  --bg-gradient-dark-4: #1a1a2e;
-  --accent-cyan: #00d4ff;
-  --accent-purple: #9d4edd;
-  --accent-pink: #ff006e;
-  --accent-teal: #14b8a6;
-  --text-primary-dark: #e8eaed;
-  --text-secondary-dark: #9ca3af;
-  --card-bg-dark: rgba(26, 26, 46, 0.7);
-  --card-border-dark: rgba(0, 212, 255, 0.2);
+ --bg-gradient-dark-1: #ffffff; 
+  --bg-gradient-dark-2: #ffffff; 
+  --bg-gradient-dark-3: #ffffff; 
+  --bg-gradient-dark-4: #ffffff; 
+
+  --accent-muted-blue-gray:   #384959; 
+  --accent-muted-blue: #6A89A7; 
+  --accent-sky-blue:   #88BDF2; 
+  --accent-dark-cyan-blue:   #516b80; 
+  --text-primary-dark:   #384959; 
+  --text-secondary-dark: #09263e; 
+  
+  --card-bg-dark:      rgba(106, 137, 167, 0.15); 
+  --card-border-dark:  rgba(56, 73, 89, 0.2);
 }
 
 /* Force Dark Mode Only */
@@ -54,11 +56,11 @@ body {
 
 /* Dark Mode Background - Always Applied */
 body {
-  background: 
+  /* background: 
     radial-gradient(ellipse at top left, rgba(157, 78, 221, 0.15), transparent 50%),
     radial-gradient(ellipse at bottom right, rgba(0, 212, 255, 0.15), transparent 50%),
     radial-gradient(ellipse at top right, rgba(255, 0, 110, 0.1), transparent 50%),
-    linear-gradient(135deg, var(--bg-gradient-dark-1) 0%, var(--bg-gradient-dark-2) 40%, var(--bg-gradient-dark-3) 80%, var(--bg-gradient-dark-4) 100%);
+    linear-gradient(135deg, var(--bg-gradient-dark-1) 0%, var(--bg-gradient-dark-2) 40%, var(--bg-gradient-dark-3) 80%, var(--bg-gradient-dark-4) 100%); */
   background-attachment: fixed;
   position: relative;
 }
@@ -70,10 +72,9 @@ body::before {
   left: 0;
   right: 0;
   bottom: 0;
-  background: 
+  /* background: 
     radial-gradient(circle at 20% 30%, rgba(0, 212, 255, 0.08) 0%, transparent 40%),
-    radial-gradient(circle at 80% 70%, rgba(157, 78, 221, 0.08) 0%, transparent 40%);
-  animation: pulse-ambient 8s ease-in-out infinite;
+    radial-gradient(circle at 80% 70%, rgba(157, 78, 221, 0.08) 0%, transparent 40%); */
   pointer-events: none;
   z-index: 0;
 }
