@@ -100,7 +100,7 @@ function HistoricalTrends({
                   return `L ${x} ${y}`;
                 })
                 .join(' ')} L 600 200 Z`}
-              fill={variant === 'admin' ? 'rgba(167, 139, 250, 0.15)' : 'rgba(59, 130, 246, 0.15)'}
+              fill={variant === 'admin' ? 'rgba(86, 96, 233, 0.15)' : 'rgba(59, 130, 246, 0.15)'}
             />
 
             {/* Line */}

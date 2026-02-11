@@ -9,6 +9,7 @@ import IncidentList from '../../components/admin/IncidentList';
 import HistoricalTrends from '../../components/common/HistoricalTrends';
 import DiagnosticsForensics from './DiagnosticsForensics';
 import AIAnalystChat from './AIAnalystChat';
+import AdminSettings from './AdminSettings';
 import { useAnomalyData } from '../../hooks/useAnomalyData';
 import { useSystemMetrics } from '../../hooks/useSystemMetrics';
 import { useAlerts } from '../../hooks/useAlerts';
@@ -56,6 +57,8 @@ function AnomalyOverview({ onLogout }: AnomalyOverviewProps) {
         return 'Diagnostics & Forensics';
       case 'ai-chat':
         return 'AI Analyst & Chat';
+      case 'settings':
+        return 'Settings';
       default:
         return 'Anomaly Overview';
     }
@@ -76,6 +79,9 @@ function AnomalyOverview({ onLogout }: AnomalyOverviewProps) {
         continuous={true}
         showProgress={true}
         showSkipButton={true}
+        disableScrolling={true}
+        disableScrollParentFix={true}
+        scrollToFirstStep={false}
         callback={handleTourCallback}
         styles={{
           options: {
@@ -91,10 +97,10 @@ function AnomalyOverview({ onLogout }: AnomalyOverviewProps) {
           skip: 'Skip Tour',
         }}
       />
-      <Sidebar activeItem={activeNav} onNavigate={setActiveNav} />
+      <Sidebar activeItem={activeNav} onNavigate={setActiveNav} onLogout={onLogout} onStartTour={startTour} />
       
       <div className="admin-main">
-        <AdminHeader pageTitle={getPageTitle()} onLogout={onLogout} onStartTour={startTour} />
+        <AdminHeader pageTitle={getPageTitle()} />
         
         <main className="admin-content">
           {activeNav === 'anomaly-overview' && (
@@ -132,7 +138,14 @@ function AnomalyOverview({ onLogout }: AnomalyOverviewProps) {
                     />
                   </>
                 ) : (
-                  <div>Loading system data...</div>
+                  Array.from({ length: 4 }).map((_, index) => (
+                    <div className="overview-skeleton-card" key={`skeleton-card-${index}`}>
+                      <div className="overview-skeleton-line w-60" />
+                      <div className="overview-skeleton-line w-35" />
+                      <div className="overview-skeleton-line w-80" />
+                      <div className="overview-skeleton-line w-55" />
+                    </div>
+                  ))
                 )}
               </section>
 
@@ -140,7 +153,24 @@ function AnomalyOverview({ onLogout }: AnomalyOverviewProps) {
               <section className="alerts-network-section">
                 <div className="alerts-column" data-tour="alerts">
                   {alertsLoading ? (
-                    <div>Loading alerts...</div>
+                    <div className="overview-skeleton-panel">
+                      <div className="overview-skeleton-line w-40" />
+                      <div className="overview-skeleton-row">
+                        <div className="overview-skeleton-line w-45" />
+                        <div className="overview-skeleton-line w-20" />
+                        <div className="overview-skeleton-line w-25" />
+                      </div>
+                      <div className="overview-skeleton-row">
+                        <div className="overview-skeleton-line w-50" />
+                        <div className="overview-skeleton-line w-18" />
+                        <div className="overview-skeleton-line w-22" />
+                      </div>
+                      <div className="overview-skeleton-row">
+                        <div className="overview-skeleton-line w-42" />
+                        <div className="overview-skeleton-line w-20" />
+                        <div className="overview-skeleton-line w-30" />
+                      </div>
+                    </div>
                   ) : (
                     <AlertList alerts={alerts} />
                   )}
@@ -153,7 +183,16 @@ function AnomalyOverview({ onLogout }: AnomalyOverviewProps) {
                       failedConnections={networkHealth.failedConnections}
                     />
                   ) : (
-                    <div>Loading network health...</div>
+                    <div className="overview-skeleton-panel">
+                      <div className="overview-skeleton-row">
+                        <div className="overview-skeleton-line w-55" />
+                        <div className="overview-skeleton-line w-25" />
+                      </div>
+                      <div className="overview-skeleton-line w-90" />
+                      <div className="overview-skeleton-line w-85" />
+                      <div className="overview-skeleton-line w-88" />
+                      <div className="overview-skeleton-line w-65" />
+                    </div>
                   )}
                 </div>
               </section>
@@ -161,7 +200,17 @@ function AnomalyOverview({ onLogout }: AnomalyOverviewProps) {
               {/* Historical Trends Section */}
               <section className="trends-section" data-tour="anomaly-trend">
                 {anomalyLoading ? (
-                  <div>Loading anomaly trends...</div>
+                  <div className="overview-skeleton-panel">
+                    <div className="overview-skeleton-row">
+                      <div className="overview-skeleton-line w-35" />
+                      <div className="overview-skeleton-line w-25" />
+                    </div>
+                    <div className="overview-skeleton-chart">
+                      {Array.from({ length: 12 }).map((_, index) => (
+                        <span key={`chart-bar-${index}`} className="overview-skeleton-bar" />
+                      ))}
+                    </div>
+                  </div>
                 ) : (
                   <HistoricalTrends
                     title="Anomaly Score Trend"
@@ -177,7 +226,25 @@ function AnomalyOverview({ onLogout }: AnomalyOverviewProps) {
               {/* Recent Incidents Section */}
               <section className="incidents-section" data-tour="incidents">
                 {incidentsLoading ? (
-                  <div>Loading incidents...</div>
+                  <div className="overview-skeleton-panel">
+                    <div className="overview-skeleton-line w-38" />
+                    <div className="overview-skeleton-list-item">
+                      <div className="overview-skeleton-row">
+                        <div className="overview-skeleton-line w-28" />
+                        <div className="overview-skeleton-line w-22" />
+                      </div>
+                      <div className="overview-skeleton-line w-90" />
+                      <div className="overview-skeleton-line w-80" />
+                    </div>
+                    <div className="overview-skeleton-list-item">
+                      <div className="overview-skeleton-row">
+                        <div className="overview-skeleton-line w-30" />
+                        <div className="overview-skeleton-line w-20" />
+                      </div>
+                      <div className="overview-skeleton-line w-85" />
+                      <div className="overview-skeleton-line w-75" />
+                    </div>
+                  </div>
                 ) : (
                   <IncidentList incidents={incidents} />
                 )}
@@ -188,6 +255,8 @@ function AnomalyOverview({ onLogout }: AnomalyOverviewProps) {
           {activeNav === 'diagnostics' && <DiagnosticsForensics />}
 
           {activeNav === 'ai-chat' && <AIAnalystChat />}
+
+          {activeNav === 'settings' && <AdminSettings />}
         </main>
 
         <footer className="admin-footer">
@@ -199,4 +268,3 @@ function AnomalyOverview({ onLogout }: AnomalyOverviewProps) {
 }
 
 export default AnomalyOverview;
-
