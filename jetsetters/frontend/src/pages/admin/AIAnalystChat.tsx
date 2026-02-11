@@ -17,7 +17,7 @@ function AIAnalystChat() {
     {
       id: '1',
       role: 'ai',
-      content: 'Hello! I\'m your AI Analyst for Sentra water quality monitoring. I can help you analyze anomalies, diagnose issues, and provide insights on water quality data. How can I assist you today?',
+      content: 'Hello! I\'m your AI Analyst for Semina water quality monitoring. I can help you analyze anomalies, diagnose issues, and provide insights on water quality data. How can I assist you today?',
     },
   ]);
 
