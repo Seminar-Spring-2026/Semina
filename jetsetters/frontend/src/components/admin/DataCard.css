@@ -1,19 +1,14 @@
 .data-card {
-  background: 
-    linear-gradient(135deg, rgba(26, 26, 46, 0.6), rgba(15, 52, 96, 0.4)),
-    rgba(26, 26, 46, 0.4);
+  background: #ffffff;
   backdrop-filter: blur(12px);
-  border: 1px solid;
-  border-image: linear-gradient(135deg, rgba(0, 212, 255, 0.3), rgba(157, 78, 221, 0.2)) 1;
+  border: 1px solid #E2E8F0;
   border-radius: 12px;
   padding: 20px;
   display: flex;
   flex-direction: column;
   gap: 12px;
   transition: all 0.3s ease;
-  box-shadow: 
-    0 4px 20px rgba(0, 212, 255, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  box-shadow: 0 2px 2px rgba(0,0,0,0.05);
   position: relative;
   overflow: hidden;
 }
@@ -25,23 +20,12 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: radial-gradient(circle at top right, rgba(0, 212, 255, 0.1), transparent 60%);
   opacity: 0;
-  transition: opacity 0.3s ease;
   pointer-events: none;
 }
 
 .data-card:hover::before {
   opacity: 1;
-}
-
-.data-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 
-    0 8px 32px rgba(0, 212, 255, 0.25), 
-    0 0 60px rgba(157, 78, 221, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  border-image: linear-gradient(135deg, rgba(0, 212, 255, 0.5), rgba(157, 78, 221, 0.4)) 1;
 }
 
 [data-theme="light"] .data-card {
@@ -65,7 +49,7 @@
   font-family: 'Ubuntu', sans-serif;
   font-size: 14px;
   font-weight: 500;
-  color: #ffffff;
+  color: #384959;
   margin: 0;
 }
 
@@ -88,8 +72,8 @@
 }
 
 .trend-neutral {
-  color: #a0a0a0;
-  background-color: rgba(160, 160, 160, 0.1);
+  color: #555353;
+  background-color: rgba(119, 118, 118, 0.1);
 }
 
 .data-card-status {
@@ -135,7 +119,7 @@
   font-family: 'Ubuntu', sans-serif;
   font-size: 36px;
   font-weight: 700;
-  color: #ffffff;
+  color: #3a4856;
   line-height: 1;
 }
 
@@ -143,14 +127,14 @@
   font-family: 'Ubuntu', sans-serif;
   font-size: 14px;
   font-weight: 400;
-  color: #ffffff;
+  color: #3a4856;
 }
 
 .data-card-description {
   font-family: 'Ubuntu', sans-serif;
   font-size: 13px;
   font-weight: 400;
-  color: #a0a0a0;
+  color: #3a4856c7;
   line-height: 1.4;
 }
 

@@ -18,28 +18,89 @@ interface LogViewerProps {
 const LOGS_PER_PAGE = 25;
 
 function LogViewer({ logs: initialLogs, loading = false }: LogViewerProps) {
+  const [searchQuery, setSearchQuery] = useState('');
   const [componentFilter, setComponentFilter] = useState('');
-  const [severityFilter, setSeverityFilter] = useState<string>('');
+  const [severityFilter, setSeverityFilter] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+  const allLogs = initialLogs ?? [];
+
+  const searchMatchedLogs = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase();
+    if (!query) return allLogs;
+
+    return allLogs.filter((log) =>
+      log.component.toLowerCase().includes(query) ||
+      log.eventType.toLowerCase().includes(query) ||
+      log.message.toLowerCase().includes(query)
+    );
+  }, [allLogs, searchQuery]);
+
+  const componentOptions = useMemo(() => {
+    const counts = new Map<string, number>();
+
+    searchMatchedLogs.forEach((log) => {
+      if (severityFilter && log.severity.toLowerCase() !== severityFilter) return;
+      counts.set(log.component, (counts.get(log.component) ?? 0) + 1);
+    });
+
+    return Array.from(counts.entries())
+      .sort((a, b) => a[0].localeCompare(b[0]))
+      .map(([component, count]) => ({ component, count }));
+  }, [searchMatchedLogs, severityFilter]);
+
+  const severityOptions = useMemo(() => {
+    const counts = new Map<string, number>([
+      ['info', 0],
+      ['warning', 0],
+      ['error', 0],
+    ]);
+
+    searchMatchedLogs.forEach((log) => {
+      if (componentFilter && log.component !== componentFilter) return;
+      const key = log.severity.toLowerCase();
+      counts.set(key, (counts.get(key) ?? 0) + 1);
+    });
+
+    return [
+      { value: 'info', label: 'Info', count: counts.get('info') ?? 0 },
+      { value: 'warning', label: 'Warning', count: counts.get('warning') ?? 0 },
+      { value: 'error', label: 'Error', count: counts.get('error') ?? 0 },
+    ];
+  }, [searchMatchedLogs, componentFilter]);
+
+  useEffect(() => {
+    if (!componentFilter) return;
+    const stillAvailable = componentOptions.some((option) => option.component === componentFilter);
+    if (!stillAvailable) {
+      setComponentFilter('');
+    }
+  }, [componentFilter, componentOptions]);
+
+  useEffect(() => {
+    if (!severityFilter) return;
+    const stillAvailable = severityOptions.some(
+      (option) => option.value === severityFilter && option.count > 0
+    );
+    if (!stillAvailable) {
+      setSeverityFilter('');
+    }
+  }, [severityFilter, severityOptions]);
 
   const filteredLogs = useMemo(() => {
-    if (!initialLogs) return [];
-    let filtered = [...initialLogs];
-    
+    let filtered = [...searchMatchedLogs];
+
     if (componentFilter) {
-      filtered = filtered.filter((log) =>
-        log.component.toLowerCase().includes(componentFilter.toLowerCase())
-      );
+      filtered = filtered.filter((log) => log.component === componentFilter);
     }
-    
+
     if (severityFilter) {
       filtered = filtered.filter((log) =>
-        log.severity.toLowerCase() === severityFilter.toLowerCase()
+        log.severity.toLowerCase() === severityFilter
       );
     }
-    
+
     return filtered;
-  }, [initialLogs, componentFilter, severityFilter]);
+  }, [searchMatchedLogs, componentFilter, severityFilter]);
 
   const totalPages = Math.ceil(filteredLogs.length / LOGS_PER_PAGE);
   const startIndex = (currentPage - 1) * LOGS_PER_PAGE;
@@ -51,6 +112,15 @@ function LogViewer({ logs: initialLogs, loading = false }: LogViewerProps) {
       setCurrentPage(1);
     }
   }, [totalPages, currentPage]);
+
+  const hasActiveFilters = Boolean(searchQuery || componentFilter || severityFilter);
+
+  const clearFilters = () => {
+    setSearchQuery('');
+    setComponentFilter('');
+    setSeverityFilter('');
+    setCurrentPage(1);
+  };
 
   const formatTimestamp = (timestamp: string) => {
     try {
@@ -148,13 +218,28 @@ function LogViewer({ logs: initialLogs, loading = false }: LogViewerProps) {
         <input
           type="text"
           className="filter-input"
-          placeholder="Filter component..."
+          placeholder="Search component, event, or message..."
+          value={searchQuery}
+          onChange={(e) => {
+            setSearchQuery(e.target.value);
+            setCurrentPage(1);
+          }}
+        />
+        <select
+          className="filter-input"
           value={componentFilter}
           onChange={(e) => {
             setComponentFilter(e.target.value);
             setCurrentPage(1);
           }}
-        />
+        >
+          <option value="">All Components ({searchMatchedLogs.length})</option>
+          {componentOptions.map((option) => (
+            <option key={option.component} value={option.component}>
+              {option.component} ({option.count})
+            </option>
+          ))}
+        </select>
         <select
           className="filter-input"
           value={severityFilter}
@@ -163,18 +248,43 @@ function LogViewer({ logs: initialLogs, loading = false }: LogViewerProps) {
             setCurrentPage(1);
           }}
         >
-          <option value="">All Severities</option>
-          <option value="info">Info</option>
-          <option value="warning">Warning</option>
-          <option value="error">Error</option>
+          <option value="">All Severities ({searchMatchedLogs.length})</option>
+          {severityOptions.map((option) => (
+            <option key={option.value} value={option.value} disabled={option.count === 0}>
+              {option.label} ({option.count})
+            </option>
+          ))}
         </select>
+        {hasActiveFilters && (
+          <button className="apply-filters-btn" onClick={clearFilters} type="button">
+            Clear Filters
+          </button>
+        )}
       </div>
 
       <div className="log-table-container">
         {loading ? (
-          <div style={{ padding: '20px', textAlign: 'center' }}>Loading logs...</div>
+          <div className="log-skeleton" aria-live="polite" aria-busy="true">
+            <div className="log-skeleton-head" />
+            {Array.from({ length: 8 }).map((_, index) => (
+              <div className="log-skeleton-row" key={`log-skeleton-${index}`}>
+                <span className="log-skeleton-cell log-w-22" />
+                <span className="log-skeleton-cell log-w-16" />
+                <span className="log-skeleton-cell log-w-16" />
+                <span className="log-skeleton-cell log-w-34" />
+                <span className="log-skeleton-cell log-w-12" />
+              </div>
+            ))}
+          </div>
         ) : filteredLogs.length === 0 ? (
-          <div style={{ padding: '20px', textAlign: 'center' }}>No logs found</div>
+          <div className="log-empty-state">
+            <p>No logs found for this filter combination.</p>
+            {hasActiveFilters && (
+              <button type="button" className="apply-filters-btn" onClick={clearFilters}>
+                Reset Filters
+              </button>
+            )}
+          </div>
         ) : (
           <>
             <table className="log-table">
@@ -232,4 +342,3 @@ function LogViewer({ logs: initialLogs, loading = false }: LogViewerProps) {
 }
 
 export default LogViewer;
-

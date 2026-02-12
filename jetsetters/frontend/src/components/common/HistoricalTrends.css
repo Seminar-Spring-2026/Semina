@@ -142,8 +142,16 @@
 .axis-label {
   font-family: 'Ubuntu', sans-serif;
   font-size: 11px;
-  color: #a0a0a0;
+  color: #3a4856d7;
   text-align: center;
+}
+
+.chart-fill-admin {
+  color: rgba(167, 139, 250, 0.15);
+}
+
+.chart-fill-community {
+  color: rgba(59, 130, 246, 0.15);
 }
 
 @media (max-width: 768px) {

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-const ADMIN_TOUR_STORAGE_KEY = 'admin-dashboard-tour-seen';
+export const ADMIN_TOUR_STORAGE_KEY = 'admin-dashboard-tour-seen';
 
 export function useAdminTour() {
   const [run, setRun] = useState(false);
@@ -29,4 +29,3 @@ export function useAdminTour() {
     stopTour,
   };
 }
-

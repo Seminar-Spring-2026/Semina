@@ -67,12 +67,12 @@
 }
 
 .output-value.highlight {
-  color: #a78bfa;
+  color: #0f4c81;
 }
 
 .output-value.timestamp {
   font-weight: 400;
-  color: #3a485696;
+  color: #3a4856d7;
   font-size: 13px;
 }
 
@@ -86,18 +86,21 @@
 }
 
 .severity-low {
-  background-color: rgba(16, 185, 129, 0.2);
-  color: #10b981;
+  background-color: #DCFCE7;
+  border: #10B981 solid 1px;
+  color: #065F46;
 }
 
 .severity-medium {
-  background-color: rgba(251, 191, 36, 0.2);
-  color: #fbbf24;
+  background-color: #f5e5bb43;
+  border: #F59E0B solid 1px;
+  color: #92400E;
 }
 
 .severity-high {
-  background-color: rgba(239, 68, 68, 0.2);
-  color: #ef4444;
+  background-color: #FEE2E2;
+  border: #EF4444 solid 1px;
+  color: #991B1B;
 }
 
 .severity-critical {
@@ -115,4 +118,3 @@
     font-size: 12px;
   }
 }
-
